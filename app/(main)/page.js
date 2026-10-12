@@ -1,7 +1,7 @@
 // app/(main)/page.jsx
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import {
   FaSearch,
   FaMapMarkerAlt,
@@ -346,6 +346,12 @@ const steps = [
 ];
 
 export default function HomePage() {
+  const [currentYear, setCurrentYear] = useState(null);
+
+  useEffect(() => {
+    setCurrentYear(new Date().getFullYear());
+  }, []);
+
   const [searchText, setSearchText] = useState("");
   const [location, setLocation] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
@@ -681,11 +687,10 @@ export default function HomePage() {
             <button
               key={name}
               onClick={() => selectCategory(name)}
-              className={`group rounded-2xl border p-5 text-left transition duration-200 hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg ${
-                activeCategory === name
+              className={`group rounded-2xl border p-5 text-left transition duration-200 hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg ${activeCategory === name
                   ? "border-blue-500 bg-blue-50"
                   : "border-slate-100 bg-white"
-              }`}
+                }`}
             >
               <span className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600 transition group-hover:bg-blue-600 group-hover:text-white">
                 <Icon size={23} />
@@ -726,11 +731,10 @@ export default function HomePage() {
               <button
                 key={name}
                 onClick={() => setActiveCategory(name)}
-                className={`shrink-0 rounded-full px-4 py-2.5 text-sm font-semibold transition ${
-                  activeCategory === name
+                className={`shrink-0 rounded-full px-4 py-2.5 text-sm font-semibold transition ${activeCategory === name
                     ? "bg-blue-600 text-white shadow-md shadow-blue-600/20"
                     : "border border-slate-200 bg-white text-slate-600 hover:border-blue-300 hover:text-blue-600"
-                }`}
+                  }`}
               >
                 {name}
               </button>
@@ -864,11 +868,10 @@ export default function HomePage() {
                 <button
                   key={cat}
                   onClick={() => setGalleryCategory(cat)}
-                  className={`shrink-0 rounded-xl px-4 py-2 text-xs font-bold transition ${
-                    galleryCategory === cat
+                  className={`shrink-0 rounded-xl px-4 py-2 text-xs font-bold transition ${galleryCategory === cat
                       ? "bg-slate-900 text-white"
                       : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                  }`}
+                    }`}
                 >
                   {cat}
                 </button>
@@ -890,7 +893,7 @@ export default function HomePage() {
                     className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-80 group-hover:opacity-90 transition duration-300" />
-                  
+
                   <span className="absolute top-4 left-4 rounded-full bg-blue-600/90 px-3 py-1 text-xs font-bold text-white backdrop-blur">
                     {item.category}
                   </span>
@@ -1019,7 +1022,9 @@ export default function HomePage() {
 
         <div className="border-t border-white/10">
           <div className="mx-auto flex max-w-7xl flex-col gap-3 px-5 py-6 text-xs text-slate-500 sm:px-8 md:flex-row md:items-center md:justify-between">
-            <p>© {new Date().getFullYear()} All Task Solution Sierra Leone. All rights reserved.</p>
+            <p>
+              © {currentYear ?? "2026"} All Task Solution Sierra Leone. All rights reserved.
+            </p>
             <p>Built to connect people with skilled workers across Sierra Leone.</p>
           </div>
         </div>

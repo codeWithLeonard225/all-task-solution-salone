@@ -1,7 +1,7 @@
 // app/(main)/page.jsx
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import {
   FaSearch,
   FaMapMarkerAlt,
@@ -27,6 +27,7 @@ import {
   FaWallet,
   FaHammer,
   FaPaperPlane,
+  FaCamera,
 } from "react-icons/fa";
 
 // Integrated Task Request Modal
@@ -197,6 +198,57 @@ const categories = [
   { name: "Other", icon: FaEllipsisH },
 ];
 
+const galleryItems = [
+  {
+    id: 1,
+    title: "Residential Solar Inverter Rigging",
+    category: "Electrical",
+    location: "Hill Station, Freetown",
+    image: "https://images.unsplash.com/photo-1508873696983-2df515122519?auto=format&fit=crop&w=900&q=85",
+    description: "Full 5KVA solar power backup installation completed for a modern family residence.",
+  },
+  {
+    id: 2,
+    title: "Modern Living Room Painting",
+    category: "Painting",
+    location: "Lumley, Freetown",
+    image: "https://images.unsplash.com/photo-1562259949-e8e7689d7828?auto=format&fit=crop&w=900&q=85",
+    description: "Complete interior wall scraping, priming, and accent painting job.",
+  },
+  {
+    id: 3,
+    title: "Deep Post-Construction Clean",
+    category: "Cleaning",
+    location: "Aberdeen, Freetown",
+    image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=900&q=85",
+    description: "Thorough deep cleaning and polishing for a newly constructed 4-bedroom villa.",
+  },
+  {
+    id: 4,
+    title: "Water Storage Tank Piping Setup",
+    category: "Plumbing",
+    location: "Wilkinson Road",
+    image: "https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?auto=format&fit=crop&w=900&q=85",
+    description: "Dual 2000L tank installation with automated booster pump configuration.",
+  },
+  {
+    id: 5,
+    title: "Lawn & Garden Revamp",
+    category: "Landscaping",
+    location: "Juba, Freetown",
+    image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=900&q=85",
+    description: "Custom turf laying, flower bed trimming, and automated sprinkler alignment.",
+  },
+  {
+    id: 6,
+    title: "Office Furniture Assembly",
+    category: "Handyman",
+    location: "Congo Cross, Freetown",
+    image: "https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=900&q=85",
+    description: "Assembly of 12 modern executive desks, ergonomical chairs, and shelving units.",
+  },
+];
+
 const tasks = [
   {
     id: 1,
@@ -294,9 +346,16 @@ const steps = [
 ];
 
 export default function HomePage() {
+  const [currentYear, setCurrentYear] = useState(null);
+
+  useEffect(() => {
+    setCurrentYear(new Date().getFullYear());
+  }, []);
+
   const [searchText, setSearchText] = useState("");
   const [location, setLocation] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
+  const [galleryCategory, setGalleryCategory] = useState("All");
   const [favorites, setFavorites] = useState([]);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -322,6 +381,11 @@ export default function HomePage() {
       return matchesCategory && matchesSearch && matchesLocation;
     });
   }, [searchText, location, activeCategory]);
+
+  const filteredGallery = useMemo(() => {
+    if (galleryCategory === "All") return galleryItems;
+    return galleryItems.filter((item) => item.category === galleryCategory);
+  }, [galleryCategory]);
 
   function toggleFavorite(id) {
     setFavorites((current) =>
@@ -366,7 +430,7 @@ export default function HomePage() {
               <span className="text-xl font-extrabold tracking-tight leading-none">
                 All Task Solution <span className="text-blue-600">SL</span>
               </span>
-              <span className="text-[10px] font-semibold text-slate-400 tracking-wider uppercase mt-1">
+              <span className="mt-1 text-[10px] font-semibold uppercase tracking-wider text-slate-400">
                 Sierra Leone
               </span>
             </div>
@@ -379,6 +443,9 @@ export default function HomePage() {
             <button onClick={scrollToTasks} className="transition hover:text-blue-600">
               Browse Tasks
             </button>
+            <a href="#gallery" className="transition hover:text-blue-600">
+              Portfolio
+            </a>
             <a href="#how-it-works" className="transition hover:text-blue-600">
               How It Works
             </a>
@@ -415,6 +482,9 @@ export default function HomePage() {
               <button onClick={scrollToTasks} className="text-left">
                 Browse Tasks
               </button>
+              <a href="#gallery" onClick={() => setMobileMenuOpen(false)}>
+                Portfolio Gallery
+              </a>
               <a href="#how-it-works" onClick={() => setMobileMenuOpen(false)}>
                 How It Works
               </a>
@@ -617,11 +687,10 @@ export default function HomePage() {
             <button
               key={name}
               onClick={() => selectCategory(name)}
-              className={`group rounded-2xl border p-5 text-left transition duration-200 hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg ${
-                activeCategory === name
+              className={`group rounded-2xl border p-5 text-left transition duration-200 hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg ${activeCategory === name
                   ? "border-blue-500 bg-blue-50"
                   : "border-slate-100 bg-white"
-              }`}
+                }`}
             >
               <span className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600 transition group-hover:bg-blue-600 group-hover:text-white">
                 <Icon size={23} />
@@ -662,11 +731,10 @@ export default function HomePage() {
               <button
                 key={name}
                 onClick={() => setActiveCategory(name)}
-                className={`shrink-0 rounded-full px-4 py-2.5 text-sm font-semibold transition ${
-                  activeCategory === name
+                className={`shrink-0 rounded-full px-4 py-2.5 text-sm font-semibold transition ${activeCategory === name
                     ? "bg-blue-600 text-white shadow-md shadow-blue-600/20"
                     : "border border-slate-200 bg-white text-slate-600 hover:border-blue-300 hover:text-blue-600"
-                }`}
+                  }`}
               >
                 {name}
               </button>
@@ -778,8 +846,83 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* PORTFOLIO / GALLERY SECTION */}
+      <section id="gallery" className="border-t border-slate-100 bg-white py-20">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8">
+          <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p className="text-sm font-bold uppercase tracking-widest text-blue-600">
+                Proven Track Record
+              </p>
+              <h2 className="mt-3 text-3xl font-extrabold tracking-tight sm:text-4xl">
+                Completed Project Gallery
+              </h2>
+              <p className="mt-3 max-w-xl text-slate-500">
+                Take a look at real tasks recently managed and executed by our registered skilled workers in Sierra Leone.
+              </p>
+            </div>
+
+            {/* Gallery Category Filter Tabs */}
+            <div className="flex gap-2 overflow-x-auto pb-2">
+              {["All", "Electrical", "Painting", "Cleaning", "Plumbing", "Landscaping", "Handyman"].map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setGalleryCategory(cat)}
+                  className={`shrink-0 rounded-xl px-4 py-2 text-xs font-bold transition ${galleryCategory === cat
+                      ? "bg-slate-900 text-white"
+                      : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                    }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {filteredGallery.map((item) => (
+              <div
+                key={item.id}
+                className="group relative overflow-hidden rounded-2xl border border-slate-100 bg-slate-50 transition duration-300 hover:-translate-y-1 hover:shadow-xl"
+              >
+                <div className="relative h-64 w-full overflow-hidden">
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    loading="lazy"
+                    className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-80 group-hover:opacity-90 transition duration-300" />
+
+                  <span className="absolute top-4 left-4 rounded-full bg-blue-600/90 px-3 py-1 text-xs font-bold text-white backdrop-blur">
+                    {item.category}
+                  </span>
+
+                  <div className="absolute bottom-4 left-4 right-4 text-white">
+                    <p className="flex items-center gap-1.5 text-xs text-blue-200 mb-1">
+                      <FaMapMarkerAlt /> {item.location}
+                    </p>
+                    <h3 className="text-lg font-bold leading-snug">{item.title}</h3>
+                  </div>
+                </div>
+
+                <div className="p-5 bg-white">
+                  <p className="text-xs leading-relaxed text-slate-500">{item.description}</p>
+                  <button
+                    onClick={() => handleOpenModal({ title: `Similar Task to: ${item.title}` })}
+                    className="mt-4 inline-flex items-center gap-2 text-xs font-bold text-blue-600 hover:text-blue-800"
+                  >
+                    Request Similar Task <FaArrowRight size={12} />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* HOW IT WORKS */}
-      <section id="how-it-works" className="mx-auto max-w-7xl px-5 py-20 sm:px-8">
+      <section id="how-it-works" className="bg-slate-50 border-t border-slate-100 mx-auto max-w-7xl px-5 py-20 sm:px-8">
         <div className="mx-auto mb-14 max-w-2xl text-center">
           <p className="text-sm font-bold uppercase tracking-widest text-blue-600">
             Simple and convenient
@@ -812,7 +955,7 @@ export default function HomePage() {
       </section>
 
       {/* CALL TO ACTION */}
-      <section id="about" className="px-5 pb-20 sm:px-8">
+      <section id="about" className="px-5 py-20 sm:px-8">
         <div className="relative mx-auto max-w-7xl overflow-hidden rounded-3xl bg-blue-600 px-6 py-12 sm:px-12 sm:py-16">
           <div className="absolute -right-16 -top-24 h-72 w-72 rounded-full border-[40px] border-white/10" />
           <div className="absolute -bottom-32 right-1/3 h-64 w-64 rounded-full bg-blue-500/70" />
@@ -862,6 +1005,7 @@ export default function HomePage() {
             <div className="mt-4 flex flex-col gap-3 text-sm text-slate-400">
               <a href="#categories" className="hover:text-white">Browse Services</a>
               <a href="#featured-tasks" className="hover:text-white">Featured Tasks</a>
+              <a href="#gallery" className="hover:text-white">Portfolio Gallery</a>
               <a href="#how-it-works" className="hover:text-white">How It Works</a>
             </div>
           </div>
@@ -878,7 +1022,9 @@ export default function HomePage() {
 
         <div className="border-t border-white/10">
           <div className="mx-auto flex max-w-7xl flex-col gap-3 px-5 py-6 text-xs text-slate-500 sm:px-8 md:flex-row md:items-center md:justify-between">
-            <p>© {new Date().getFullYear()} All Task Solution Sierra Leone. All rights reserved.</p>
+            <p>
+              © {currentYear ?? "2026"} All Task Solution Sierra Leone. All rights reserved.
+            </p>
             <p>Built to connect people with skilled workers across Sierra Leone.</p>
           </div>
         </div>

@@ -27,17 +27,19 @@ import {
   FaWallet,
   FaHammer,
   FaPaperPlane,
-  FaCamera,
 } from "react-icons/fa";
 
-// Integrated Task Request Modal
-function TaskRequestModal({ isOpen, onClose, selectedService }) {
+import { buildingCategories, buildingMaterials } from "./components/buildingMaterialsData";
+// Add FaWhatsapp to your react-icons/fa imports at the top:
+import { FaWhatsapp } from "react-icons/fa";
+
+// Integrated Task & Material Request Modal
+function TaskRequestModal({ isOpen, onClose, selectedItem, itemType = "task" }) {
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
     email: "",
-    taskTitle: "",
-    category: "Home Repair",
+    itemTitle: "",
     details: "",
   });
 
@@ -56,14 +58,13 @@ function TaskRequestModal({ isOpen, onClose, selectedService }) {
       name: "",
       phone: "",
       email: "",
-      taskTitle: "",
-      category: "Home Repair",
+      itemTitle: "",
       details: "",
     });
     onClose();
   };
 
-  const currentTitle = selectedService ? selectedService.title : formData.taskTitle;
+  const currentTitle = selectedItem ? selectedItem.title : formData.itemTitle;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
@@ -80,10 +81,12 @@ function TaskRequestModal({ isOpen, onClose, selectedService }) {
           <div className="py-8 text-center">
             <FaCheckCircle className="mx-auto mb-4 h-16 w-16 text-emerald-500" />
             <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
-              Task Request Submitted!
+              {itemType === "material" ? "Material Inquiry Submitted!" : "Task Request Submitted!"}
             </h3>
             <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
-              The All Task Solution Sierra Leone agent team will review your request and contact you shortly to assign a vetted worker.
+              {itemType === "material"
+                ? "Our wholesale agent team will verify shop stock, delivery terms, and call you back immediately."
+                : "The All Task Solution Sierra Leone agent team will review your request and contact you shortly to assign a vetted worker."}
             </p>
             <button
               onClick={handleReset}
@@ -95,10 +98,12 @@ function TaskRequestModal({ isOpen, onClose, selectedService }) {
         ) : (
           <>
             <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
-              Request a Task
+              {itemType === "material" ? "Order / Inquire Building Materials" : "Request a Task"}
             </h3>
             <p className="mb-6 text-sm text-slate-500 dark:text-slate-400">
-              Tell us what you need done and our agent team will assign the right specialist.
+              {itemType === "material"
+                ? "Enter your delivery location and quantity needed. We coordinate directly with wholesale shops."
+                : "Tell us what you need done and our agent team will assign the right specialist."}
             </p>
 
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -146,27 +151,27 @@ function TaskRequestModal({ isOpen, onClose, selectedService }) {
 
               <div>
                 <label className="mb-1 block text-xs font-semibold uppercase text-slate-600 dark:text-slate-300">
-                  Task Needed *
+                  {itemType === "material" ? "Material & Quantity *" : "Task Needed *"}
                 </label>
                 <input
                   type="text"
                   required
                   value={currentTitle}
-                  onChange={(e) => setFormData({ ...formData, taskTitle: e.target.value })}
-                  placeholder="e.g. Electrical Wiring, Plumbing Fix"
+                  onChange={(e) => setFormData({ ...formData, itemTitle: e.target.value })}
+                  placeholder={itemType === "material" ? "e.g. 50 bags of Cement" : "e.g. Electrical Wiring, Plumbing Fix"}
                   className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:focus:ring-blue-900"
                 />
               </div>
 
               <div>
                 <label className="mb-1 block text-xs font-semibold uppercase text-slate-600 dark:text-slate-300">
-                  Task Details & Requirements
+                  {itemType === "material" ? "Delivery Site Location & Notes" : "Task Details & Requirements"}
                 </label>
                 <textarea
                   rows={3}
                   value={formData.details}
                   onChange={(e) => setFormData({ ...formData, details: e.target.value })}
-                  placeholder="Describe location, budget expectation, or specific timeline..."
+                  placeholder={itemType === "material" ? "Specify delivery address (e.g. Goderich near junction)..." : "Describe location, budget expectation, or specific timeline..."}
                   className="w-full resize-none rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:focus:ring-blue-900"
                 />
               </div>
@@ -175,7 +180,7 @@ function TaskRequestModal({ isOpen, onClose, selectedService }) {
                 type="submit"
                 className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 py-3.5 font-bold text-white shadow-lg shadow-blue-600/20 transition hover:bg-blue-700"
               >
-                <FaPaperPlane className="h-4 w-4" /> Submit Task Request
+                <FaPaperPlane className="h-4 w-4" /> {itemType === "material" ? "Submit Material Order" : "Submit Task Request"}
               </button>
             </form>
           </>
@@ -356,10 +361,15 @@ export default function HomePage() {
   const [location, setLocation] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
   const [galleryCategory, setGalleryCategory] = useState("All");
+  const [activeMaterialCategory, setActiveMaterialCategory] = useState("all");
   const [favorites, setFavorites] = useState([]);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
+
+  // Material modal states
+  const [materialModalOpen, setMaterialModalOpen] = useState(false);
+  const [selectedMaterial, setSelectedMaterial] = useState(null);
 
   const filteredTasks = useMemo(() => {
     const search = searchText.trim().toLowerCase();
@@ -386,6 +396,11 @@ export default function HomePage() {
     if (galleryCategory === "All") return galleryItems;
     return galleryItems.filter((item) => item.category === galleryCategory);
   }, [galleryCategory]);
+
+  const filteredMaterials = useMemo(() => {
+    if (activeMaterialCategory === "all") return buildingMaterials;
+    return buildingMaterials.filter((m) => m.category === activeMaterialCategory);
+  }, [activeMaterialCategory]);
 
   function toggleFavorite(id) {
     setFavorites((current) =>
@@ -443,6 +458,9 @@ export default function HomePage() {
             <button onClick={scrollToTasks} className="transition hover:text-blue-600">
               Browse Tasks
             </button>
+            <a href="#building-materials" className="transition hover:text-blue-600">
+              Building Materials
+            </a>
             <a href="#gallery" className="transition hover:text-blue-600">
               Portfolio
             </a>
@@ -482,6 +500,9 @@ export default function HomePage() {
               <button onClick={scrollToTasks} className="text-left">
                 Browse Tasks
               </button>
+              <a href="#building-materials" onClick={() => setMobileMenuOpen(false)}>
+                Building Materials
+              </a>
               <a href="#gallery" onClick={() => setMobileMenuOpen(false)}>
                 Portfolio Gallery
               </a>
@@ -524,13 +545,12 @@ export default function HomePage() {
             </div>
 
             <h1 className="text-4xl font-black leading-[1.12] tracking-tight text-white sm:text-5xl lg:text-6xl">
-              Find Skilled Workers
-              <span className="mt-2 block text-blue-400">for Any Task.</span>
+              Find Skilled Workers & Materials
+              <span className="mt-2 block text-blue-400">for Any Project.</span>
             </h1>
 
             <p className="mt-6 max-w-xl text-base leading-8 text-slate-300 sm:text-lg">
-              From home repairs to cleaning and professional services, tell us what you need.
-              We connect you with vetted workers across Sierra Leone to get the job done right.
+              From home repairs and construction to wholesale building materials like cement and iron rods, we connect you with vetted suppliers and professionals across Sierra Leone.
             </p>
 
             <div className="mt-9 flex flex-wrap items-center gap-3 text-sm text-white/90">
@@ -539,11 +559,11 @@ export default function HomePage() {
               </span>
               <span className="mx-1 text-white/30">•</span>
               <span className="flex items-center gap-2">
-                <FaCheckCircle size={18} className="text-emerald-400" /> Managed assignments
+                <FaCheckCircle size={18} className="text-emerald-400" /> Wholesale supply
               </span>
               <span className="mx-1 text-white/30">•</span>
               <span className="flex items-center gap-2">
-                <FaClock size={18} className="text-emerald-400" /> Convenient service
+                <FaClock size={18} className="text-emerald-400" /> Convenient delivery
               </span>
             </div>
           </div>
@@ -576,7 +596,7 @@ export default function HomePage() {
                   <input
                     value={searchText}
                     onChange={(e) => setSearchText(e.target.value)}
-                    placeholder="e.g. plumbing, painting..."
+                    placeholder="e.g. plumbing, painting, cement..."
                     className="h-12 w-full bg-transparent text-sm outline-none"
                   />
                 </span>
@@ -645,14 +665,128 @@ export default function HomePage() {
           {[
             { value: "10+", label: "Service categories" },
             { value: "Local SL", label: "Skilled professionals" },
-            { value: "Managed", label: "Task assignments" },
-            { value: "Reliable", label: "Support and records" },
+            { value: "Wholesale", label: "Building materials" },
+            { value: "Reliable", label: "Support and delivery" },
           ].map((item) => (
             <div key={item.label} className="text-center">
               <p className="text-xl font-extrabold text-slate-900">{item.value}</p>
               <p className="mt-1 text-xs text-slate-500 sm:text-sm">{item.label}</p>
             </div>
           ))}
+        </div>
+      </section>
+
+    {/* WHOLESALE BUILDING MATERIALS SECTION */}
+     {/* WHOLESALE BUILDING MATERIALS SECTION */}
+      <section id="building-materials" className="bg-slate-50 py-20">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8">
+          <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p className="text-sm font-bold uppercase tracking-widest text-blue-600">
+                Direct Wholesale Supply
+              </p>
+              <h2 className="mt-3 text-3xl font-extrabold tracking-tight sm:text-4xl">
+                Building Materials & Hardware Market
+              </h2>
+              <p className="mt-3 max-w-xl text-slate-500">
+                Order bulk cement, iron rods, and construction materials directly via WhatsApp chat with transparent pricing and free delivery conditions.
+              </p>
+            </div>
+
+            {/* Material Category Tabs */}
+            <div className="flex gap-2 overflow-x-auto pb-2">
+              {buildingCategories.map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => setActiveMaterialCategory(cat.id)}
+                  className={`shrink-0 rounded-xl px-4 py-2.5 text-xs font-bold transition ${
+                    activeMaterialCategory === cat.id
+                      ? "bg-blue-600 text-white shadow-md"
+                      : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-100"
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {filteredMaterials.map((material) => {
+              const phones = Array.isArray(material.displayPhones)
+                ? material.displayPhones.join(" / ")
+                : material.displayPhone || "078355416";
+
+              const messageText = `Hello All Task Solution! I would like to order / inquire about the following building material:
+
+*Item:* ${material.title}
+*Shop Name:* ${material.shopName}
+*Location:* ${material.location}
+*Price:* ${material.price}
+*Delivery Terms:* ${material.freeDeliveryText}
+*Description:* ${material.description}
+*Image Reference:* ${material.image}
+
+Please confirm stock availability and estimated delivery time.`;
+
+              const whatsappUrl = `https://wa.me/${material.whatsappNumber || "23278355416"}?text=${encodeURIComponent(messageText)}`;
+
+              return (
+                <div
+                  key={material.id}
+                  className="group overflow-hidden rounded-2xl border border-slate-100 bg-white transition duration-300 hover:-translate-y-1 hover:shadow-xl flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="relative h-48 w-full overflow-hidden bg-slate-200">
+                      <img
+                        src={material.image}
+                        alt={material.title}
+                        loading="lazy"
+                        className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                      />
+                      <span className="absolute left-3 top-3 rounded-full bg-slate-900/80 px-3 py-1 text-[11px] font-bold text-white backdrop-blur">
+                        {material.shopName}
+                      </span>
+                    </div>
+
+                    <div className="p-5">
+                      <div className="flex items-center gap-1.5 text-xs text-slate-500 mb-1">
+                        <FaMapMarkerAlt className="text-blue-600 shrink-0" /> {material.location}
+                      </div>
+                      <h3 className="text-base font-bold tracking-tight text-slate-900 group-hover:text-blue-600">
+                        {material.title}
+                      </h3>
+                      <p className="mt-2 text-xs text-slate-500 line-clamp-2">{material.description}</p>
+                    </div>
+                  </div>
+
+                  <div className="p-5 pt-0">
+                    <div className="pt-4 border-t border-slate-100">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm font-black text-blue-600">{material.price}</span>
+                      </div>
+                      <p className="text-[11px] font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-lg mb-3">
+                        📦 {material.freeDeliveryText}
+                      </p>
+
+                      <p className="mb-3 text-[11px] font-medium text-slate-500">
+                        Contact: <span className="font-bold text-slate-800">{phones}</span>
+                      </p>
+
+                      <a
+                        href={whatsappUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 py-2.5 text-xs font-bold text-white shadow-md shadow-emerald-600/20 transition hover:bg-emerald-700"
+                      >
+                        <FaWhatsapp className="h-4 w-4" /> Order on WhatsApp
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </section>
 
@@ -687,10 +821,11 @@ export default function HomePage() {
             <button
               key={name}
               onClick={() => selectCategory(name)}
-              className={`group rounded-2xl border p-5 text-left transition duration-200 hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg ${activeCategory === name
+              className={`group rounded-2xl border p-5 text-left transition duration-200 hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg ${
+                activeCategory === name
                   ? "border-blue-500 bg-blue-50"
                   : "border-slate-100 bg-white"
-                }`}
+              }`}
             >
               <span className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600 transition group-hover:bg-blue-600 group-hover:text-white">
                 <Icon size={23} />
@@ -731,10 +866,11 @@ export default function HomePage() {
               <button
                 key={name}
                 onClick={() => setActiveCategory(name)}
-                className={`shrink-0 rounded-full px-4 py-2.5 text-sm font-semibold transition ${activeCategory === name
+                className={`shrink-0 rounded-full px-4 py-2.5 text-sm font-semibold transition ${
+                  activeCategory === name
                     ? "bg-blue-600 text-white shadow-md shadow-blue-600/20"
                     : "border border-slate-200 bg-white text-slate-600 hover:border-blue-300 hover:text-blue-600"
-                  }`}
+                }`}
               >
                 {name}
               </button>
@@ -868,10 +1004,11 @@ export default function HomePage() {
                 <button
                   key={cat}
                   onClick={() => setGalleryCategory(cat)}
-                  className={`shrink-0 rounded-xl px-4 py-2 text-xs font-bold transition ${galleryCategory === cat
+                  className={`shrink-0 rounded-xl px-4 py-2 text-xs font-bold transition ${
+                    galleryCategory === cat
                       ? "bg-slate-900 text-white"
                       : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                    }`}
+                  }`}
                 >
                   {cat}
                 </button>
@@ -966,10 +1103,10 @@ export default function HomePage() {
                 Let's get to work
               </p>
               <h2 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-4xl">
-                Have a task that needs doing?
+                Have a task or material order that needs doing?
               </h2>
               <p className="mt-4 leading-7 text-blue-100">
-                Submit your request and let All Task Solution Sierra Leone match and assign the best skilled worker for you.
+                Submit your request and let All Task Solution Sierra Leone match and assign the best skilled worker or wholesale supplier for you.
               </p>
             </div>
 
@@ -996,17 +1133,17 @@ export default function HomePage() {
               </span>
             </a>
             <p className="mt-5 max-w-md text-sm leading-7 text-slate-400">
-              Connecting clients in Sierra Leone with skilled professionals for home, business, and everyday tasks. Your request, our coordination, the right worker.
+              Connecting clients in Sierra Leone with skilled professionals and wholesale building materials for home, business, and everyday projects.
             </p>
           </div>
 
           <div>
             <h3 className="font-bold">Quick Links</h3>
             <div className="mt-4 flex flex-col gap-3 text-sm text-slate-400">
+              <a href="#building-materials" className="hover:text-white">Building Materials</a>
               <a href="#categories" className="hover:text-white">Browse Services</a>
               <a href="#featured-tasks" className="hover:text-white">Featured Tasks</a>
               <a href="#gallery" className="hover:text-white">Portfolio Gallery</a>
-              <a href="#how-it-works" className="hover:text-white">How It Works</a>
             </div>
           </div>
 
@@ -1025,7 +1162,7 @@ export default function HomePage() {
             <p>
               © {currentYear ?? "2026"} All Task Solution Sierra Leone. All rights reserved.
             </p>
-            <p>Built to connect people with skilled workers across Sierra Leone.</p>
+            <p>Built to connect people with skilled workers and materials across Sierra Leone.</p>
           </div>
         </div>
       </footer>
@@ -1034,7 +1171,16 @@ export default function HomePage() {
       <TaskRequestModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        selectedService={selectedService}
+        selectedItem={selectedService}
+        itemType="task"
+      />
+
+      {/* Material Order Modal */}
+      <TaskRequestModal
+        isOpen={materialModalOpen}
+        onClose={() => setMaterialModalOpen(false)}
+        selectedItem={selectedMaterial}
+        itemType="material"
       />
     </main>
   );

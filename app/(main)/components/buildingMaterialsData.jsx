@@ -1,3 +1,4 @@
+
 // app/(main)/components/buildingMaterialsData.jsx
 
 export const buildingCategories = [
@@ -5,7 +6,7 @@ export const buildingCategories = [
   { id: "cement", label: "Cement & Aggregates" },
   { id: "iron", label: "Iron Rods & Steel" },
   { id: "roofing", label: "Roofing & Timber" },
-  { id: "finishing", label: "Tiles & Finishing" }
+  { id: "finishing", label: "Tiles & Finishing" },
 ];
 
 export const buildingMaterials = [
@@ -62,3 +63,69 @@ export const buildingMaterials = [
     description: "Rust-resistant colored aluminium sheets with high durability against heavy tropical rains."
   }
 ];
+
+// Generate a WhatsApp order link with complete material details.
+
+// export function getMaterialWhatsAppLink(material) {
+//   const message = [
+//     "Hello All Task Solution SL! 👋",
+//     "",
+//     "I am interested in ordering this building material:",
+//     "",
+//     `📦 Material: ${material.title}`,
+//     `🏪 Supplier: ${material.shopName}`,
+//     `📍 Location: ${material.location}`,
+//     `💰 Price: ${material.price}`,
+//     `🚚 Delivery: ${material.freeDeliveryText}`,
+//     "",
+//     `📝 Description: ${material.description}`,
+//     "",
+//     "🖼️ View Material Image:",
+//     material.image,
+//     "",
+//     "🔢 Quantity: Please confirm with me.",
+//     "📍 Delivery location: I will provide it.",
+//     "",
+//     "Please confirm availability, total cost, and delivery arrangements.",
+//     "Thank you!"
+//   ].join("\n");
+
+//   return `https://wa.me/${material.whatsappNumber}?text=${encodeURIComponent(
+//     message
+//   )}`;
+// }
+
+export function getMaterialWhatsAppLink(material) {
+  const websiteUrl = "https://all-task-solution-salone.vercel.app";
+
+  // Convert local image paths into full public URLs.
+  const imageUrl = material.image.startsWith("http")
+    ? material.image
+    : `${websiteUrl}${material.image.startsWith("/") ? "" : "/"}${material.image}`;
+
+  const message = [
+    "Hello All Task Solution SL! 👋",
+    "",
+    "I am interested in ordering this building material:",
+    "",
+    `📦 Material: ${material.title}`,
+    `🏪 Supplier: ${material.shopName}`,
+    `📍 Location: ${material.location}`,
+    `💰 Price: ${material.price}`,
+    `🚚 Delivery: ${material.freeDeliveryText}`,
+    "",
+    `📝 Description: ${material.description}`,
+    "",
+    "🖼️ Click the link below to view the material image:",
+    imageUrl,
+    "",
+    "🔢 Quantity: Please confirm with me.",
+    "📍 Delivery location: I will provide it.",
+    "",
+    "Please confirm availability, total cost, and delivery arrangements.",
+    "Thank you!",
+  ].join("\n");
+
+  return `https://wa.me/${material.whatsappNumber}?text=${encodeURIComponent(message)}`;
+}
+

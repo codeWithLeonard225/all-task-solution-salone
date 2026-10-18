@@ -29,7 +29,11 @@ import {
   FaPaperPlane,
 } from "react-icons/fa";
 
-import { buildingCategories, buildingMaterials } from "./components/buildingMaterialsData";
+import {
+  buildingCategories,
+  buildingMaterials,
+  getMaterialWhatsAppLink,
+} from "./components/buildingMaterialsData";
 // Add FaWhatsapp to your react-icons/fa imports at the top:
 import { FaWhatsapp } from "react-icons/fa";
 
@@ -677,7 +681,6 @@ export default function HomePage() {
       </section>
 
     {/* WHOLESALE BUILDING MATERIALS SECTION */}
-     {/* WHOLESALE BUILDING MATERIALS SECTION */}
       <section id="building-materials" className="bg-slate-50 py-20">
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
           <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
@@ -712,80 +715,109 @@ export default function HomePage() {
           </div>
 
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {filteredMaterials.map((material) => {
-              const phones = Array.isArray(material.displayPhones)
-                ? material.displayPhones.join(" / ")
-                : material.displayPhone || "078355416";
+          
+{filteredMaterials.map((material) => {
+  // Use the WhatsApp message generator from buildingMaterialsData.jsx
+  const whatsappUrl = getMaterialWhatsAppLink(material);
 
-              const messageText = `Hello All Task Solution! I would like to order / inquire about the following building material:
+  // Support both a single phone number and multiple phone numbers
+  const displayPhones = Array.isArray(material.displayPhones)
+  ? material.displayPhones.join(" / ")
+  : material.displayPhones || material.displayPhone || "078355416";
 
-*Item:* ${material.title}
-*Shop Name:* ${material.shopName}
-*Location:* ${material.location}
-*Price:* ${material.price}
-*Delivery Terms:* ${material.freeDeliveryText}
-*Description:* ${material.description}
-*Image Reference:* ${material.image}
+  return (
+    <div
+      key={material.id}
+      className="group flex flex-col justify-between overflow-hidden rounded-2xl border border-slate-100 bg-white transition duration-300 hover:-translate-y-1 hover:shadow-xl"
+    >
+      <div>
+        {/* Material image */}
+        <div className="relative h-48 w-full overflow-hidden bg-slate-200">
+         <a
+  href={
+    material.image.startsWith("http")
+      ? material.image
+      : `https://all-task-solution-salone.vercel.app${
+          material.image.startsWith("/") ? "" : "/"
+        }${material.image}`
+  }
+  target="_blank"
+  rel="noopener noreferrer"
+  title={`View ${material.title} image`}
+>
+          <img
+  src={
+    material.image.startsWith("http")
+      ? material.image
+      : `https://all-task-solution-salone.vercel.app${
+          material.image.startsWith("/") ? "" : "/"
+        }${material.image}`
+  }
+  alt={material.title}
+  loading="lazy"
+  className="h-full w-full cursor-zoom-in object-cover transition duration-500 group-hover:scale-105"
+/>
+          </a>
 
-Please confirm stock availability and estimated delivery time.`;
+          <span className="absolute left-3 top-3 max-w-[90%] truncate rounded-full bg-slate-900/80 px-3 py-1 text-[11px] font-bold text-white backdrop-blur">
+            {material.shopName}
+          </span>
 
-              const whatsappUrl = `https://wa.me/${material.whatsappNumber || "23278355416"}?text=${encodeURIComponent(messageText)}`;
+          <span className="absolute bottom-3 right-3 rounded-full bg-white/95 px-3 py-1 text-[10px] font-bold text-slate-700 shadow">
+            Click image to view
+          </span>
+        </div>
 
-              return (
-                <div
-                  key={material.id}
-                  className="group overflow-hidden rounded-2xl border border-slate-100 bg-white transition duration-300 hover:-translate-y-1 hover:shadow-xl flex flex-col justify-between"
-                >
-                  <div>
-                    <div className="relative h-48 w-full overflow-hidden bg-slate-200">
-                      <img
-                        src={material.image}
-                        alt={material.title}
-                        loading="lazy"
-                        className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                      />
-                      <span className="absolute left-3 top-3 rounded-full bg-slate-900/80 px-3 py-1 text-[11px] font-bold text-white backdrop-blur">
-                        {material.shopName}
-                      </span>
-                    </div>
+        {/* Material details */}
+        <div className="p-5">
+          <div className="mb-1 flex items-center gap-1.5 text-xs text-slate-500">
+            <FaMapMarkerAlt className="shrink-0 text-blue-600" />
+            {material.location}
+          </div>
 
-                    <div className="p-5">
-                      <div className="flex items-center gap-1.5 text-xs text-slate-500 mb-1">
-                        <FaMapMarkerAlt className="text-blue-600 shrink-0" /> {material.location}
-                      </div>
-                      <h3 className="text-base font-bold tracking-tight text-slate-900 group-hover:text-blue-600">
-                        {material.title}
-                      </h3>
-                      <p className="mt-2 text-xs text-slate-500 line-clamp-2">{material.description}</p>
-                    </div>
-                  </div>
+          <h3 className="text-base font-bold tracking-tight text-slate-900 transition group-hover:text-blue-600">
+            {material.title}
+          </h3>
 
-                  <div className="p-5 pt-0">
-                    <div className="pt-4 border-t border-slate-100">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm font-black text-blue-600">{material.price}</span>
-                      </div>
-                      <p className="text-[11px] font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-lg mb-3">
-                        📦 {material.freeDeliveryText}
-                      </p>
+          <p className="mt-2 line-clamp-3 text-xs leading-5 text-slate-500">
+            {material.description}
+          </p>
+        </div>
+      </div>
 
-                      <p className="mb-3 text-[11px] font-medium text-slate-500">
-                        Contact: <span className="font-bold text-slate-800">{phones}</span>
-                      </p>
+      {/* Price and order button */}
+      <div className="p-5 pt-0">
+        <div className="border-t border-slate-100 pt-4">
+          <p className="mb-2 text-sm font-black text-blue-600">
+            {material.price}
+          </p>
 
-                      <a
-                        href={whatsappUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 py-2.5 text-xs font-bold text-white shadow-md shadow-emerald-600/20 transition hover:bg-emerald-700"
-                      >
-                        <FaWhatsapp className="h-4 w-4" /> Order on WhatsApp
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+          <p className="mb-3 rounded-lg bg-emerald-50 px-2.5 py-2 text-[11px] font-semibold text-emerald-700">
+            📦 {material.freeDeliveryText}
+          </p>
+
+          <p className="mb-3 break-words text-[11px] font-medium text-slate-500">
+            WhatsApp Contact:{" "}
+            <span className="font-bold text-slate-800">
+              {displayPhones}
+            </span>
+          </p>
+
+          <a
+            href={whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 py-3 text-xs font-bold text-white shadow-md shadow-emerald-600/20 transition hover:bg-emerald-700"
+          >
+            <FaWhatsapp className="h-4 w-4" />
+            Order on WhatsApp
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+})}
+
           </div>
         </div>
       </section>

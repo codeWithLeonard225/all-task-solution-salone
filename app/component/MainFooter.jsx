@@ -1,4 +1,7 @@
-// app/components/MainFooter.js
+
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { FaTools, FaArrowRight } from "react-icons/fa";
 
@@ -9,11 +12,15 @@ const quickLinks = [
   { name: "Featured Tasks", href: "#featured-tasks" },
   { name: "Portfolio Gallery", href: "#gallery" },
   { name: "How It Works", href: "#how-it-works" },
-  { name: "About Us", href: "#about" },
+  { name: "About Us", href: "/about" },
 ];
 
 export default function Footer({ handleOpenModal }) {
-  const currentYear = new Date().getFullYear();
+  const [currentYear, setCurrentYear] = useState("");
+
+  useEffect(() => {
+    setCurrentYear(String(new Date().getFullYear()));
+  }, []);
 
   return (
     <footer className="mt-20 border-t border-slate-100 bg-slate-950 text-white">
@@ -24,7 +31,6 @@ export default function Footer({ handleOpenModal }) {
         <div className="lg:col-span-2">
 
           <Link href="/" className="inline-flex items-center gap-3">
-
             <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-600 text-white">
               <FaTools size={23} />
             </span>
@@ -38,7 +44,6 @@ export default function Footer({ handleOpenModal }) {
                 Sierra Leone
               </span>
             </span>
-
           </Link>
 
           <p className="mt-5 max-w-md text-sm leading-7 text-slate-400">
@@ -58,13 +63,11 @@ export default function Footer({ handleOpenModal }) {
 
         {/* QUICK LINKS */}
         <div>
-
           <h3 className="text-lg font-bold text-white">
             Quick Links
           </h3>
 
           <div className="mt-5 flex flex-col gap-3 text-sm text-slate-400">
-
             {quickLinks.map((link) => (
               <Link
                 key={link.name}
@@ -74,14 +77,11 @@ export default function Footer({ handleOpenModal }) {
                 {link.name}
               </Link>
             ))}
-
           </div>
-
         </div>
 
         {/* ACTION */}
         <div>
-
           <h3 className="text-lg font-bold text-white">
             Get Started
           </h3>
@@ -97,18 +97,16 @@ export default function Footer({ handleOpenModal }) {
           >
             Submit Task Request →
           </button>
-
         </div>
 
       </div>
 
       {/* BOTTOM SECTION */}
       <div className="border-t border-white/10">
-
         <div className="mx-auto flex max-w-7xl flex-col gap-3 px-5 py-6 text-xs text-slate-500 sm:px-8 md:flex-row md:items-center md:justify-between">
 
           <p>
-            © {currentYear} All Task Solution Sierra Leone.
+            © {currentYear || "All rights reserved"} All Task Solution Sierra Leone.
             All rights reserved.
           </p>
 
@@ -117,7 +115,6 @@ export default function Footer({ handleOpenModal }) {
           </p>
 
         </div>
-
       </div>
 
     </footer>

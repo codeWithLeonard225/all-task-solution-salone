@@ -11,8 +11,6 @@ import {
   FaShieldAlt,
   FaClock,
   FaCheckCircle,
-  FaBars,
-  FaTimes,
   FaTools,
   FaBroom,
   FaTruck,
@@ -27,6 +25,7 @@ import {
   FaWallet,
   FaHammer,
   FaPaperPlane,
+  FaWhatsapp,
 } from "react-icons/fa";
 
 import {
@@ -34,8 +33,6 @@ import {
   buildingMaterials,
   getMaterialWhatsAppLink,
 } from "./components/buildingMaterialsData";
-// Add FaWhatsapp to your react-icons/fa imports at the top:
-import { FaWhatsapp } from "react-icons/fa";
 
 // Integrated Task & Material Request Modal
 function TaskRequestModal({ isOpen, onClose, selectedItem, itemType = "task" }) {
@@ -355,19 +352,12 @@ const steps = [
 ];
 
 export default function HomePage() {
-  const [currentYear, setCurrentYear] = useState(null);
-
-  useEffect(() => {
-    setCurrentYear(new Date().getFullYear());
-  }, []);
-
   const [searchText, setSearchText] = useState("");
   const [location, setLocation] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
   const [galleryCategory, setGalleryCategory] = useState("All");
   const [activeMaterialCategory, setActiveMaterialCategory] = useState("all");
   const [favorites, setFavorites] = useState([]);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
 
@@ -416,7 +406,6 @@ export default function HomePage() {
 
   function scrollToTasks() {
     document.getElementById("featured-tasks")?.scrollIntoView({ behavior: "smooth" });
-    setMobileMenuOpen(false);
   }
 
   function selectCategory(name) {
@@ -437,103 +426,11 @@ export default function HomePage() {
   }
 
   return (
-    <main className="min-h-screen overflow-hidden bg-white text-slate-900">
-      {/* NAVIGATION */}
-      <header className="sticky top-0 z-40 border-b border-slate-100 bg-white/95 backdrop-blur">
-        <div className="mx-auto flex h-[76px] max-w-7xl items-center justify-between px-5 sm:px-8">
-          <a href="/" className="flex items-center gap-2.5">
-            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600 text-white">
-              <FaTools size={23} />
-            </span>
-            <div className="flex flex-col">
-              <span className="text-xl font-extrabold tracking-tight leading-none">
-                All Task Solution <span className="text-blue-600">SL</span>
-              </span>
-              <span className="mt-1 text-[10px] font-semibold uppercase tracking-wider text-slate-400">
-                Sierra Leone
-              </span>
-            </div>
-          </a>
-
-          <nav className="hidden items-center gap-8 text-sm font-medium text-slate-600 md:flex">
-            <a href="/" className="text-blue-600">
-              Home
-            </a>
-            <button onClick={scrollToTasks} className="transition hover:text-blue-600">
-              Browse Tasks
-            </button>
-            <a href="#building-materials" className="transition hover:text-blue-600">
-              Building Materials
-            </a>
-            <a href="#gallery" className="transition hover:text-blue-600">
-              Portfolio
-            </a>
-            <a href="#how-it-works" className="transition hover:text-blue-600">
-              How It Works
-            </a>
-            <a href="#about" className="transition hover:text-blue-600">
-              About Us
-            </a>
-          </nav>
-
-          <div className="hidden items-center gap-3 md:flex">
-            <button
-              onClick={() => handleOpenModal()}
-              className="rounded-xl bg-blue-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-blue-600/20 transition hover:bg-blue-700"
-            >
-              Request a Task <FaArrowRight className="ml-1 inline" />
-            </button>
-          </div>
-
-          <button
-            className="rounded-lg p-2 md:hidden"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Toggle navigation"
-            aria-expanded={mobileMenuOpen}
-          >
-            {mobileMenuOpen ? <FaTimes size={23} /> : <FaBars size={23} />}
-          </button>
-        </div>
-
-        {mobileMenuOpen && (
-          <div className="border-t border-slate-100 bg-white px-5 py-5 md:hidden">
-            <nav className="flex flex-col gap-4 text-sm font-semibold">
-              <a href="/" onClick={() => setMobileMenuOpen(false)}>
-                Home
-              </a>
-              <button onClick={scrollToTasks} className="text-left">
-                Browse Tasks
-              </button>
-              <a href="#building-materials" onClick={() => setMobileMenuOpen(false)}>
-                Building Materials
-              </a>
-              <a href="#gallery" onClick={() => setMobileMenuOpen(false)}>
-                Portfolio Gallery
-              </a>
-              <a href="#how-it-works" onClick={() => setMobileMenuOpen(false)}>
-                How It Works
-              </a>
-              <a href="#about" onClick={() => setMobileMenuOpen(false)}>
-                About Us
-              </a>
-              <button
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  handleOpenModal();
-                }}
-                className="rounded-xl bg-blue-600 p-3 text-center font-bold text-white"
-              >
-                Request a Task
-              </button>
-            </nav>
-          </div>
-        )}
-      </header>
-
+    <div>
       {/* HERO SECTION */}
       <section className="relative isolate min-h-[590px] bg-slate-950">
         <div
-          className="absolute inset-0 -z-20 bg-cover bg-center"
+          className="absolute inset-0 -z-25 bg-cover bg-center"
           style={{
             backgroundImage:
               "url('https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=2200&q=90')",
@@ -637,28 +534,6 @@ export default function HomePage() {
                 </button>
               </div>
             </form>
-
-            <div className="mt-6 border-t border-slate-100 pt-5">
-              <p className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-400">
-                Popular searches
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {["Cleaning", "Plumbing", "Painting", "Electrical"].map((item) => (
-                  <button
-                    key={item}
-                    type="button"
-                    onClick={() => {
-                      setSearchText(item);
-                      setActiveCategory("All");
-                      scrollToTasks();
-                    }}
-                    className="rounded-full bg-slate-100 px-3 py-2 text-xs font-semibold text-slate-600 transition hover:bg-blue-50 hover:text-blue-700"
-                  >
-                    {item}
-                  </button>
-                ))}
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -680,7 +555,7 @@ export default function HomePage() {
         </div>
       </section>
 
-    {/* WHOLESALE BUILDING MATERIALS SECTION */}
+      {/* WHOLESALE BUILDING MATERIALS SECTION */}
       <section id="building-materials" className="bg-slate-50 py-20">
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
           <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
@@ -715,304 +590,108 @@ export default function HomePage() {
           </div>
 
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          
-{filteredMaterials.map((material) => {
-  // Use the WhatsApp message generator from buildingMaterialsData.jsx
-  const whatsappUrl = getMaterialWhatsAppLink(material);
+            {filteredMaterials.map((material) => {
+              const whatsappUrl = getMaterialWhatsAppLink(material);
+              const displayPhones = Array.isArray(material.displayPhones)
+                ? material.displayPhones.join(" / ")
+                : material.displayPhones || material.displayPhone || "078355416";
 
-  // Support both a single phone number and multiple phone numbers
-  const displayPhones = Array.isArray(material.displayPhones)
-  ? material.displayPhones.join(" / ")
-  : material.displayPhones || material.displayPhone || "078355416";
-
-  return (
-    <div
-      key={material.id}
-      className="group flex flex-col justify-between overflow-hidden rounded-2xl border border-slate-100 bg-white transition duration-300 hover:-translate-y-1 hover:shadow-xl"
-    >
-      <div>
-        {/* Material image */}
-        <div className="relative h-48 w-full overflow-hidden bg-slate-200">
-         <a
-  href={
-    material.image.startsWith("http")
-      ? material.image
-      : `https://all-task-solution-salone.vercel.app${
-          material.image.startsWith("/") ? "" : "/"
-        }${material.image}`
-  }
-  target="_blank"
-  rel="noopener noreferrer"
-  title={`View ${material.title} image`}
->
-          <img
-  src={
-    material.image.startsWith("http")
-      ? material.image
-      : `https://all-task-solution-salone.vercel.app${
-          material.image.startsWith("/") ? "" : "/"
-        }${material.image}`
-  }
-  alt={material.title}
-  loading="lazy"
-  className="h-full w-full cursor-zoom-in object-cover transition duration-500 group-hover:scale-105"
-/>
-          </a>
-
-          <span className="absolute left-3 top-3 max-w-[90%] truncate rounded-full bg-slate-900/80 px-3 py-1 text-[11px] font-bold text-white backdrop-blur">
-            {material.shopName}
-          </span>
-
-          <span className="absolute bottom-3 right-3 rounded-full bg-white/95 px-3 py-1 text-[10px] font-bold text-slate-700 shadow">
-            Click image to view
-          </span>
-        </div>
-
-        {/* Material details */}
-        <div className="p-5">
-          <div className="mb-1 flex items-center gap-1.5 text-xs text-slate-500">
-            <FaMapMarkerAlt className="shrink-0 text-blue-600" />
-            {material.location}
-          </div>
-
-          <h3 className="text-base font-bold tracking-tight text-slate-900 transition group-hover:text-blue-600">
-            {material.title}
-          </h3>
-
-          <p className="mt-2 line-clamp-3 text-xs leading-5 text-slate-500">
-            {material.description}
-          </p>
-        </div>
-      </div>
-
-      {/* Price and order button */}
-      <div className="p-5 pt-0">
-        <div className="border-t border-slate-100 pt-4">
-          <p className="mb-2 text-sm font-black text-blue-600">
-            {material.price}
-          </p>
-
-          <p className="mb-3 rounded-lg bg-emerald-50 px-2.5 py-2 text-[11px] font-semibold text-emerald-700">
-            📦 {material.freeDeliveryText}
-          </p>
-
-          <p className="mb-3 break-words text-[11px] font-medium text-slate-500">
-            WhatsApp Contact:{" "}
-            <span className="font-bold text-slate-800">
-              {displayPhones}
-            </span>
-          </p>
-
-          <a
-            href={whatsappUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 py-3 text-xs font-bold text-white shadow-md shadow-emerald-600/20 transition hover:bg-emerald-700"
-          >
-            <FaWhatsapp className="h-4 w-4" />
-            Order on WhatsApp
-          </a>
-        </div>
-      </div>
-    </div>
-  );
-})}
-
-          </div>
-        </div>
-      </section>
-
-      {/* SERVICE CATEGORIES */}
-      <section id="categories" className="mx-auto max-w-7xl px-5 py-20 sm:px-8">
-        <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p className="text-sm font-bold uppercase tracking-widest text-blue-600">
-              Explore services
-            </p>
-            <h2 className="mt-3 text-3xl font-extrabold tracking-tight sm:text-4xl">
-              What can we help you with?
-            </h2>
-            <p className="mt-3 max-w-xl text-slate-500">
-              Find the right service for your home, business or personal needs.
-            </p>
-          </div>
-
-          <button
-            onClick={() => {
-              clearFilters();
-              scrollToTasks();
-            }}
-            className="text-sm font-bold text-blue-600 hover:text-blue-800"
-          >
-            Browse all tasks <FaArrowRight className="ml-1 inline" />
-          </button>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-5 lg:gap-5">
-          {categories.map(({ name, icon: Icon }) => (
-            <button
-              key={name}
-              onClick={() => selectCategory(name)}
-              className={`group rounded-2xl border p-5 text-left transition duration-200 hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg ${
-                activeCategory === name
-                  ? "border-blue-500 bg-blue-50"
-                  : "border-slate-100 bg-white"
-              }`}
-            >
-              <span className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600 transition group-hover:bg-blue-600 group-hover:text-white">
-                <Icon size={23} />
-              </span>
-              <span className="block text-sm font-bold">{name}</span>
-              <span className="mt-2 flex items-center gap-1 text-xs text-slate-400">
-                Explore <FaArrowUp size={11} />
-              </span>
-            </button>
-          ))}
-        </div>
-      </section>
-
-      {/* FEATURED TASKS */}
-      <section id="featured-tasks" className="bg-slate-50 py-20">
-        <div className="mx-auto max-w-7xl px-5 sm:px-8">
-          <div className="mb-8 flex flex-wrap items-end justify-between gap-5">
-            <div>
-              <p className="text-sm font-bold uppercase tracking-widest text-blue-600">
-                Discover opportunities
-              </p>
-              <h2 className="mt-3 text-3xl font-extrabold tracking-tight sm:text-4xl">
-                Featured Tasks
-              </h2>
-              <p className="mt-3 max-w-xl text-slate-500">
-                Explore sample jobs and see the kinds of services available on our platform.
-              </p>
-            </div>
-
-            <span className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-600 shadow-sm">
-              {filteredTasks.length} tasks found
-            </span>
-          </div>
-
-          {/* CATEGORY FILTERS */}
-          <div className="mb-8 flex gap-2 overflow-x-auto pb-2">
-            {["All", ...categories.map((c) => c.name)].map((name) => (
-              <button
-                key={name}
-                onClick={() => setActiveCategory(name)}
-                className={`shrink-0 rounded-full px-4 py-2.5 text-sm font-semibold transition ${
-                  activeCategory === name
-                    ? "bg-blue-600 text-white shadow-md shadow-blue-600/20"
-                    : "border border-slate-200 bg-white text-slate-600 hover:border-blue-300 hover:text-blue-600"
-                }`}
-              >
-                {name}
-              </button>
-            ))}
-          </div>
-
-          {/* TASK CARDS */}
-          {filteredTasks.length > 0 ? (
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {filteredTasks.map((task) => (
-                <article
-                  key={task.id}
-                  className="group overflow-hidden rounded-2xl border border-slate-100 bg-white transition duration-300 hover:-translate-y-1 hover:shadow-xl"
+              return (
+                <div
+                  key={material.id}
+                  className="group flex flex-col justify-between overflow-hidden rounded-2xl border border-slate-100 bg-white transition duration-300 hover:-translate-y-1 hover:shadow-xl"
                 >
-                  <div className="relative h-56 overflow-hidden bg-slate-200">
-                    <img
-                      src={task.image}
-                      alt={task.title}
-                      loading="lazy"
-                      className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                    />
-
-                    <span className="absolute left-4 top-4 rounded-full bg-white/95 px-3 py-1.5 text-xs font-bold text-slate-700 shadow-sm">
-                      {task.category}
-                    </span>
-
-                    {task.urgent && (
-                      <span className="absolute bottom-4 left-4 rounded-full bg-amber-100 px-3 py-1.5 text-xs font-bold text-amber-800">
-                        Needs attention
-                      </span>
-                    )}
-
-                    <button
-                      type="button"
-                      onClick={() => toggleFavorite(task.id)}
-                      aria-label="Favorite"
-                      className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-md transition hover:scale-105"
-                    >
-                      <FaHeart
-                        size={18}
-                        className={
-                          favorites.includes(task.id) ? "text-red-500" : "text-slate-600"
+                  <div>
+                    {/* Material image */}
+                    <div className="relative h-48 w-full overflow-hidden bg-slate-200">
+                      <a
+                        href={
+                          material.image.startsWith("http")
+                            ? material.image
+                            : `https://all-task-solution-salone.vercel.app${
+                                material.image.startsWith("/") ? "" : "/"
+                              }${material.image}`
                         }
-                      />
-                    </button>
-                  </div>
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title={`View ${material.title} image`}
+                      >
+                        <img
+                          src={
+                            material.image.startsWith("http")
+                              ? material.image
+                              : `https://all-task-solution-salone.vercel.app${
+                                  material.image.startsWith("/") ? "" : "/"
+                                }${material.image}`
+                          }
+                          alt={material.title}
+                          loading="lazy"
+                          className="h-full w-full cursor-zoom-in object-cover transition duration-500 group-hover:scale-105"
+                        />
+                      </a>
 
-                  <div className="p-5">
-                    <div className="mb-3 flex items-center justify-between gap-3">
-                      <span className="flex items-center gap-1.5 text-xs text-slate-500">
-                        <FaMapMarkerAlt />
-                        {task.location}
+                      <span className="absolute left-3 top-3 max-w-[90%] truncate rounded-full bg-slate-900/80 px-3 py-1 text-[11px] font-bold text-white backdrop-blur">
+                        {material.shopName}
                       </span>
-                      <span className="text-xs text-slate-400">{task.posted}</span>
+
+                      <span className="absolute bottom-3 right-3 rounded-full bg-white/95 px-3 py-1 text-[10px] font-bold text-slate-700 shadow">
+                        Click image to view
+                      </span>
                     </div>
 
-                    <h3 className="text-lg font-extrabold tracking-tight transition group-hover:text-blue-600">
-                      {task.title}
-                    </h3>
-
-                    <p className="mt-2 min-h-[48px] text-sm leading-6 text-slate-500">
-                      {task.description}
-                    </p>
-
-                    <div className="mt-5 flex items-center justify-between gap-3 border-t border-slate-100 pt-4">
-                      <div>
-                        <p className="text-xs text-slate-400">Estimated budget</p>
-                        <p className="mt-1 text-base font-extrabold text-slate-900">
-                          {task.price}
-                        </p>
+                    {/* Material details */}
+                    <div className="p-5">
+                      <div className="mb-1 flex items-center gap-1.5 text-xs text-slate-500">
+                        <FaMapMarkerAlt className="shrink-0 text-blue-600" />
+                        {material.location}
                       </div>
 
-                      <button
-                        onClick={() => handleOpenModal(task)}
-                        className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600 transition hover:bg-blue-600 hover:text-white"
-                        aria-label={`Request ${task.title}`}
-                      >
-                        <FaArrowUp size={18} />
-                      </button>
+                      <h3 className="text-base font-bold tracking-tight text-slate-900 transition group-hover:text-blue-600">
+                        {material.title}
+                      </h3>
+
+                      <p className="mt-2 line-clamp-3 text-xs leading-5 text-slate-500">
+                        {material.description}
+                      </p>
                     </div>
                   </div>
-                </article>
-              ))}
-            </div>
-          ) : (
-            <div className="rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center">
-              <FaSearch size={32} className="mx-auto text-slate-300" />
-              <h3 className="mt-4 text-lg font-bold">No matching tasks found</h3>
-              <p className="mt-2 text-sm text-slate-500">
-                Try a different service or location.
-              </p>
-              <button
-                onClick={clearFilters}
-                className="mt-5 rounded-xl bg-blue-600 px-5 py-3 text-sm font-bold text-white hover:bg-blue-700"
-              >
-                Clear filters
-              </button>
-            </div>
-          )}
 
-          <div className="mt-10 text-center">
-            <button
-              onClick={() => handleOpenModal()}
-              className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-6 py-3.5 text-sm font-bold transition hover:border-blue-300 hover:text-blue-600"
-            >
-              Request Custom Task <FaArrowRight />
-            </button>
+                  {/* Price and order button */}
+                  <div className="p-5 pt-0">
+                    <div className="border-t border-slate-100 pt-4">
+                      <p className="mb-2 text-sm font-black text-blue-600">
+                        {material.price}
+                      </p>
+
+                      <p className="mb-3 rounded-lg bg-emerald-50 px-2.5 py-2 text-[11px] font-semibold text-emerald-700">
+                        📦 {material.freeDeliveryText}
+                      </p>
+
+                      <p className="mb-3 break-words text-[11px] font-medium text-slate-500">
+                        WhatsApp Contact:{" "}
+                        <span className="font-bold text-slate-800">
+                          {displayPhones}
+                        </span>
+                      </p>
+
+                      <a
+                        href={whatsappUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 py-3 text-xs font-bold text-white shadow-md shadow-emerald-600/20 transition hover:bg-emerald-700"
+                      >
+                        <FaWhatsapp className="h-4 w-4" />
+                        Order on WhatsApp
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
+
 
       {/* PORTFOLIO / GALLERY SECTION */}
       <section id="gallery" className="border-t border-slate-100 bg-white py-20">
@@ -1152,53 +831,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer className="border-t border-slate-100 bg-slate-950 text-white">
-        <div className="mx-auto grid max-w-7xl gap-10 px-5 py-14 sm:px-8 md:grid-cols-2 lg:grid-cols-4">
-          <div className="lg:col-span-2">
-            <a href="/" className="inline-flex items-center gap-2.5">
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600">
-                <FaTools size={21} />
-              </span>
-              <span className="text-xl font-extrabold">
-                All Task Solution <span className="text-blue-400">SL</span>
-              </span>
-            </a>
-            <p className="mt-5 max-w-md text-sm leading-7 text-slate-400">
-              Connecting clients in Sierra Leone with skilled professionals and wholesale building materials for home, business, and everyday projects.
-            </p>
-          </div>
-
-          <div>
-            <h3 className="font-bold">Quick Links</h3>
-            <div className="mt-4 flex flex-col gap-3 text-sm text-slate-400">
-              <a href="#building-materials" className="hover:text-white">Building Materials</a>
-              <a href="#categories" className="hover:text-white">Browse Services</a>
-              <a href="#featured-tasks" className="hover:text-white">Featured Tasks</a>
-              <a href="#gallery" className="hover:text-white">Portfolio Gallery</a>
-            </div>
-          </div>
-
-          <div>
-            <h3 className="font-bold">Action</h3>
-            <div className="mt-4 flex flex-col gap-3 text-sm text-slate-400">
-              <button onClick={() => handleOpenModal()} className="text-left hover:text-white">
-                Submit Task Request
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div className="border-t border-white/10">
-          <div className="mx-auto flex max-w-7xl flex-col gap-3 px-5 py-6 text-xs text-slate-500 sm:px-8 md:flex-row md:items-center md:justify-between">
-            <p>
-              © {currentYear ?? "2026"} All Task Solution Sierra Leone. All rights reserved.
-            </p>
-            <p>Built to connect people with skilled workers and materials across Sierra Leone.</p>
-          </div>
-        </div>
-      </footer>
-
       {/* Task Request Modal */}
       <TaskRequestModal
         isOpen={isModalOpen}
@@ -1214,6 +846,6 @@ export default function HomePage() {
         selectedItem={selectedMaterial}
         itemType="material"
       />
-    </main>
+    </div>
   );
 }

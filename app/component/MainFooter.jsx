@@ -1,4 +1,4 @@
-
+// components/Footer.jsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -7,11 +7,12 @@ import { FaTools, FaArrowRight } from "react-icons/fa";
 
 const quickLinks = [
   { name: "Home", href: "/" },
-  { name: "Building Materials", href: "#building-materials" },
-  { name: "Browse Services", href: "#categories" },
-  { name: "Featured Tasks", href: "#featured-tasks" },
-  { name: "Portfolio Gallery", href: "#gallery" },
-  { name: "How It Works", href: "#how-it-works" },
+  { name: "Flight Bookings", href: "/services/flights-booking" },
+  { name: "Hotels & Accommodations", href: "/services/accommodations" },
+  { name: "Building Materials", href: "/services/building-materials" },
+  { name: "Skilled Workers Hub", href: "/services/skilled-workers-hub" },
+  { name: "Vehicle Rental", href: "/services/vehicle-rental" },
+  { name: "How It Works", href: "/#how-it-works" },
   { name: "About Us", href: "/about" },
 ];
 
@@ -24,12 +25,10 @@ export default function Footer({ handleOpenModal }) {
 
   return (
     <footer className="mt-20 border-t border-slate-100 bg-slate-950 text-white">
-
       <div className="mx-auto grid max-w-7xl gap-10 px-5 py-14 sm:px-8 md:grid-cols-2 lg:grid-cols-4">
 
         {/* BRANDING */}
         <div className="lg:col-span-2">
-
           <Link href="/" className="inline-flex items-center gap-3">
             <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-600 text-white">
               <FaTools size={23} />
@@ -47,9 +46,7 @@ export default function Footer({ handleOpenModal }) {
           </Link>
 
           <p className="mt-5 max-w-md text-sm leading-7 text-slate-400">
-            Connecting clients in Sierra Leone with skilled professionals
-            and wholesale building materials for home, business, and
-            everyday projects.
+            Connecting clients in Sierra Leone with skilled professionals, flight reservations, luxury hotel accommodations, vehicle rentals, and wholesale building materials.
           </p>
 
           <button
@@ -58,14 +55,11 @@ export default function Footer({ handleOpenModal }) {
           >
             Request a Task <FaArrowRight />
           </button>
-
         </div>
 
         {/* QUICK LINKS */}
         <div>
-          <h3 className="text-lg font-bold text-white">
-            Quick Links
-          </h3>
+          <h3 className="text-lg font-bold text-white">Quick Links</h3>
 
           <div className="mt-5 flex flex-col gap-3 text-sm text-slate-400">
             {quickLinks.map((link) => (
@@ -82,13 +76,10 @@ export default function Footer({ handleOpenModal }) {
 
         {/* ACTION */}
         <div>
-          <h3 className="text-lg font-bold text-white">
-            Get Started
-          </h3>
+          <h3 className="text-lg font-bold text-white">Get Started</h3>
 
           <p className="mt-5 text-sm leading-7 text-slate-400">
-            Need a skilled worker or building materials? Send us your
-            request and let our team help you.
+            Need flights, hotel reservations, skilled workers, or building supplies? Send us your request and let our team assist you immediately.
           </p>
 
           <button
@@ -104,19 +95,15 @@ export default function Footer({ handleOpenModal }) {
       {/* BOTTOM SECTION */}
       <div className="border-t border-white/10">
         <div className="mx-auto flex max-w-7xl flex-col gap-3 px-5 py-6 text-xs text-slate-500 sm:px-8 md:flex-row md:items-center md:justify-between">
-
           <p>
-            © {currentYear || "All rights reserved"} All Task Solution Sierra Leone.
-            All rights reserved.
+            © {currentYear || "All rights reserved"} All Task Solution Sierra Leone. All rights reserved.
           </p>
 
           <p>
-            Built to connect people with skilled workers and materials across Sierra Leone.
+            Built to connect people with skilled services, travel, and supplies across Sierra Leone.
           </p>
-
         </div>
       </div>
-
     </footer>
   );
 }

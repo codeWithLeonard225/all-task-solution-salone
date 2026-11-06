@@ -7,8 +7,9 @@ import { FaTools, FaArrowRight } from "react-icons/fa";
 
 const quickLinks = [
   { name: "Home", href: "/" },
-  { name: "Flight Bookings", href: "/services/flights-booking" },
-  { name: "Hotels & Accommodations", href: "/services/accommodations" },
+   { name: "Flight Booking", href: "/services/flights" },
+  { name: "Accommodation Booking", href: "/services/accommodations" },
+  { name: "Hotel Booking", href: "/services/hotels" },
   { name: "Building Materials", href: "/services/building-materials" },
   { name: "Skilled Workers Hub", href: "/services/skilled-workers-hub" },
   { name: "Vehicle Rental", href: "/services/vehicle-rental" },

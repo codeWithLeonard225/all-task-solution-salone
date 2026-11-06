@@ -54,7 +54,7 @@ export default function MainNavbar() {
 
           <span className="flex flex-col">
             <span className="whitespace-nowrap text-lg font-extrabold leading-none tracking-tight sm:text-xl">
-              All Task Solution{" "}
+              All Services Solution{" "}
               <span className="text-blue-600">SL</span>
             </span>
 
